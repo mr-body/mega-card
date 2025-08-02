@@ -1,8 +1,19 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
+import { createRoot } from 'react-dom/client';
 import { ElementData, CanvasProperties, HistoryState, WorkspaceTab, CRDFile, ElementType } from "@/types/visual-editor"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
-const initialCanvasProperties: CanvasProperties = {
+export const initialCanvasProperties: CanvasProperties = {
   backgroundColor: "#ffffff",
   backgroundImage: "",
   width: "400px",
@@ -593,22 +604,85 @@ export const useVisualEditor = () => {
   }
 
   const deleteElement = (elementId: string) => {
-    const removeElement = (elements: ElementData[]): ElementData[] => {
-      return elements.filter((element) => {
-        if (element.id === elementId) {
-          return false
-        }
-        if (element.children) {
-          element.children = removeElement(element.children)
-        }
-        return true
-      })
-    }
+    // 1. Mostrar o Alert Dialog de confirmação
+    const confirmDelete = async () => {
+      return new Promise<boolean>((resolve) => {
+        // Criar um container para o dialog
+        const dialogContainer = document.createElement('div');
+        dialogContainer.id = 'confirm-delete-dialog';
+        document.body.appendChild(dialogContainer);
 
-    setElements(removeElement(elements))
-    setSelectedElement(null)
-    saveToHistory()
-  }
+        // Criar o root com a nova API
+        const root = createRoot(dialogContainer);
+
+        // Renderizar o dialog
+        root.render(
+          <AlertDialog
+            open={true}
+            onOpenChange={(open) => {
+              if (!open) {
+                resolve(false);
+                setTimeout(() => {
+                  root.unmount();
+                  dialogContainer.remove();
+                }, 100);
+              }
+            }}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta ação não pode ser desfeita. O elemento e seus filhos serão removidos.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => {
+                  resolve(false);
+                  setTimeout(() => {
+                    root.unmount();
+                    dialogContainer.remove();
+                  }, 100);
+                }}>
+                  Cancelar
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={() => {
+                  resolve(true);
+                  setTimeout(() => {
+                    root.unmount();
+                    dialogContainer.remove();
+                  }, 100);
+                }}>
+                  Confirmar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        );
+      });
+    };
+
+    // 2. Processar a deleção se confirmado
+    confirmDelete().then((confirmed) => {
+      if (!confirmed) return;
+
+      const removeElement = (elements: ElementData[]): ElementData[] => {
+        return elements.filter((element) => {
+          if (element.id === elementId) {
+            return false;
+          }
+          if (element.children) {
+            element.children = removeElement(element.children);
+          }
+          return true;
+        });
+      };
+
+      setElements(removeElement(elements));
+      setSelectedElement(null);
+      saveToHistory();
+    });
+  };
 
   const updateElementProperty = (elementId: string, property: string, value: string) => {
     const updateElement = (elements: ElementData[]): ElementData[] => {

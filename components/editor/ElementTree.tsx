@@ -2,7 +2,7 @@
 import React from "react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Eye, EyeOff, MoreVertical, Star } from "lucide-react"
+import { Eye, EyeOff, ImageIcon, MoreVertical, Square, Star, Type } from "lucide-react"
 import { ElementData } from "@/types/visual-editor"
 import { availableIcons } from "@/lib/editor-config"
 
@@ -23,15 +23,15 @@ interface ElementTreeProps {
 const getElementIcon = (type: ElementData["type"]) => {
   switch (type) {
     case "frame":
-      return Eye
+      return Square
     case "text":
-      return EyeOff
+      return Type
     case "image":
-      return Eye
+      return ImageIcon
     case "icon":
       return Star
     default:
-      return Eye
+      return Square
   }
 }
 
@@ -64,7 +64,7 @@ export const ElementTree: React.FC<ElementTreeProps> = ({
 
               size={'icon'}>
               {
-                !element.hidden ? <Eye /> : <EyeOff />
+                !element.hidden ?  <EyeOff /> : <Eye />
               }
             </Button>
           </div>
@@ -77,13 +77,13 @@ export const ElementTree: React.FC<ElementTreeProps> = ({
             onDragStart={() => handleTreeDragStart(element.id)}
             onDrop={(e) => {
               e.stopPropagation()
-              if (draggedTreeElement && draggedTreeElement !== element.id) {
+              if (draggedTreeElement && draggedTreeElement !== element.id as any) {
                 handleDrop(e, element.id)
               }
             }}
             onDragOver={handleDragOver}
           >
-            <div className="flex items-center">
+            <div className="flex items-center px-4">
               {
                 element.type === 'icon'
                   ? (() => {
@@ -156,7 +156,7 @@ export const ElementTree: React.FC<ElementTreeProps> = ({
         </div>
 
         {element.children && element.children.length > 0 && (
-          <div className="space-y-1 ">{element.children.map((child) => renderElementTree(child, depth + 1))}</div>
+          <div className="space-y-1 ">{element.children.map((child) => renderElementTree(child as any, depth + 1))}</div>
         )}
       </div>
     )
@@ -165,6 +165,6 @@ export const ElementTree: React.FC<ElementTreeProps> = ({
   return <>{elements.map((element) => renderElementTree(element))}</>
 }
 
-function draggedTreeElement(draggedTreeElement: any, arg1: string, id: any) {
+export function draggedTreeElement(draggedTreeElement: any, arg1: string, id: any) {
   throw new Error("Function not implemented.")
 }

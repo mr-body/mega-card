@@ -15,7 +15,7 @@ interface ElementRendererProps {
 }
 
 // Componentes reutilizáveis para cada elemento
-const ElementComponents = {
+export const ElementComponents = {
   frame: ({ element, selected, onClick, children, onDrop, onDragOver, onResize }: any) => {
     const frameElement = element as FrameElement
 
