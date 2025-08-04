@@ -1,8 +1,10 @@
 
 import React from "react"
-import { ElementData, FrameElement, TextElement, ImageElement, IconElement } from "@/types/visual-editor"
+import { ElementData, FrameElement, TextElement, ImageElement, IconElement, QRcodeElement, BarcodeElement } from "@/types/visual-editor"
 import { availableIcons } from "@/lib/editor-config"
 import { ImageIcon, Star } from "lucide-react"
+import QRCode from "react-qr-code";
+import Barcode from 'react-barcode';
 
 interface ElementRendererProps {
   element: ElementData
@@ -295,6 +297,169 @@ export const ElementComponents = {
       </>
     )
   },
+
+  QRcode: ({ element, selected, onClick, onResize }: any) => {
+    const QRcodeElement = element as QRcodeElement
+    const value = QRcodeElement.properties.value || "Exemplo de QRcode"
+    const title = QRcodeElement.properties.title || "QRcode"
+    const level = QRcodeElement.properties.level || "L"
+    const fgColor = QRcodeElement.properties.fgColor || "#000000"
+    const bgColor = QRcodeElement.properties.bgColor || "#FFFFFF"
+    const viewBox = QRcodeElement.properties.viewBox || "0 0 256 256"
+    const size = QRcodeElement.properties.sizeBox || 90
+
+    const containerStyle: React.CSSProperties = {
+      position: "relative",
+      display: "inline-block",
+    }
+
+    const contentStyle: React.CSSProperties = {
+      position: QRcodeElement.properties.position === "static" ? "static" : (QRcodeElement.properties.position as any),
+      left:
+        QRcodeElement.properties.left && QRcodeElement.properties.left !== "auto"
+          ? QRcodeElement.properties.left
+          : undefined,
+      top:
+        QRcodeElement.properties.top && QRcodeElement.properties.top !== "auto" ? QRcodeElement.properties.top : undefined,
+      right:
+        QRcodeElement.properties.right && QRcodeElement.properties.right !== "auto"
+          ? QRcodeElement.properties.right
+          : undefined,
+      bottom:
+        QRcodeElement.properties.bottom && QRcodeElement.properties.bottom !== "auto"
+          ? QRcodeElement.properties.bottom
+          : undefined,
+      width: QRcodeElement.properties.width || "96px",
+      height: QRcodeElement.properties.height || "64px",
+      minWidth: QRcodeElement.properties.minWidth || undefined,
+      minHeight: QRcodeElement.properties.minHeight || undefined,
+      maxWidth: QRcodeElement.properties.maxWidth || undefined,
+      maxHeight: QRcodeElement.properties.maxHeight || undefined,
+      margin: QRcodeElement.properties.margin || "0",
+      padding: QRcodeElement.properties.padding || "0",
+      borderRadius: QRcodeElement.properties.borderRadius || "0",
+      border: QRcodeElement.properties.border || "none",
+      // boxShadow: QRcodeElement.properties.boxShadow || undefined,
+      opacity: QRcodeElement.properties.opacity || "1",
+      zIndex: QRcodeElement.properties.zIndex || "auto",
+      overflow: "hidden",
+    }
+
+
+    if (QRcodeElement.hidden === false) return null
+
+    return (
+      <>
+        <div
+          className={`cursor-pointer transition-all ${selected ? "ring-2 ring-blue-400" : ""}`}
+          style={contentStyle}
+          onClick={onClick}
+        >
+          <QRCode
+            size={size}
+            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+            value={value}
+            title={title}
+            level={level}
+            fgColor={fgColor}
+            bgColor={bgColor}
+            viewBox={viewBox}
+          />
+        </div>
+        {/* {selected && (
+          <ResizeHandles
+            onResize={onResize}
+            isAbsolute={QRcodeElement.properties.position === "absolute" || QRcodeElement.properties.position === "fixed"}
+          />
+        )} */}
+      </>
+    )
+  },
+
+  barcode : ({ element, selected, onClick, onResize }: any) => {
+    const QRcodeElement = element as BarcodeElement
+
+    const allowedFormats = [
+      "CODE128", "CODE39", "CODE128A", "CODE128B", "CODE128C",
+      "EAN13", "EAN8", "EAN5", "EAN2", "UPC", "UPCE", "ITF14",
+      "ITF", "MSI", "MSI10", "MSI11", "MSI1010", "MSI1110",
+      "pharmacode", "codabar", "GenericBarcode",
+    ] as const
+
+    type BarcodeFormat = typeof allowedFormats[number]
+
+    const width = Number(QRcodeElement.properties.width) || 1
+    const height = Number(QRcodeElement.properties.height) || 100
+    const fontSize = Number(QRcodeElement.properties.fontSize) || 20
+    const textMargin = Number(QRcodeElement.properties.textMargin) || 2
+    const format: BarcodeFormat =
+      allowedFormats.includes(QRcodeElement.properties.format as BarcodeFormat)
+        ? (QRcodeElement.properties.format as BarcodeFormat)
+        : "CODE128"
+
+    const displayValue = QRcodeElement.properties.displayValue ?? true
+    const fontOptions = QRcodeElement.properties.fontOptions || ""
+    const font = QRcodeElement.properties.font || "monospace"
+    const textAlign = QRcodeElement.properties.textAlign || "center"
+    const textPosition = QRcodeElement.properties.textPosition || "bottom"
+    const background = QRcodeElement.properties.background || "#ffffff"
+    const lineColor = QRcodeElement.properties.lineColor || "#000000"
+    const value = QRcodeElement.properties.value || "barcode-example"
+    const hidden = QRcodeElement.hidden
+
+    if (hidden) return null
+
+    const contentStyle: React.CSSProperties = {
+      position: QRcodeElement.properties.position === "static" ? "static" : (QRcodeElement.properties.position as any),
+      left: QRcodeElement.properties.left !== "auto" ? QRcodeElement.properties.left : undefined,
+      top: QRcodeElement.properties.top !== "auto" ? QRcodeElement.properties.top : undefined,
+      right: QRcodeElement.properties.right !== "auto" ? QRcodeElement.properties.right : undefined,
+      bottom: QRcodeElement.properties.bottom !== "auto" ? QRcodeElement.properties.bottom : undefined,
+      width: QRcodeElement.properties.width || "auto",
+      height: QRcodeElement.properties.height || "auto",
+      margin: QRcodeElement.properties.margin || "0",
+      padding: QRcodeElement.properties.padding || "0",
+      borderRadius: QRcodeElement.properties.borderRadius || "0",
+      border: QRcodeElement.properties.border || "none",
+      opacity: QRcodeElement.properties.opacity || "1",
+      zIndex: QRcodeElement.properties.zIndex || "auto",
+      overflow: "hidden",
+    }
+
+    return (
+      <>
+        <div
+          className={`cursor-pointer w-full flex justify-center items-center transition-all ${selected ? "ring-2 ring-blue-400" : ""}`}
+          style={contentStyle}
+          onClick={onClick}
+        >
+          <Barcode
+            value={value}
+            width={width}
+            height={height}
+            format={format}
+            displayValue={displayValue}
+            fontOptions={fontOptions}
+            font={font}
+            textAlign={textAlign}
+            textPosition={textPosition}
+            textMargin={textMargin}
+            fontSize={fontSize}
+            background={background}
+            lineColor={lineColor}
+          />
+        </div>
+{/* 
+        {selected && (
+          <ResizeHandles
+            onResize={onResize}
+            isAbsolute={QRcodeElement.properties.position === "absolute" || QRcodeElement.properties.position === "fixed"}
+          />
+        )} */}
+      </>
+    )
+  }
+
 }
 
 export const ElementRenderer: React.FC<ElementRendererProps> = (props) => {

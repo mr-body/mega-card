@@ -190,7 +190,7 @@ export default function VisualEditor() {
   return (
     <div className="h-screen">
       <TabBar
-        tabs={tabs}
+        tabs={tabs as any}
         activeTabId={activeTabId}
         onTabSelect={switchTab}
         onTabClose={closeTab}

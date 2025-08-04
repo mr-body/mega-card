@@ -2,7 +2,7 @@
 import { icons } from "lucide-react"
 
 // Tipos para os elementos
-export type ElementType = "frame" | "text" | "image" | "icon"
+export type ElementType = "frame" | "text" | "image" | "icon" | "barcode" | "QRcode"
 
 export interface CanvasProperties {
   backgroundColor: string
@@ -248,7 +248,125 @@ export interface IconElement extends BaseElementData {
   }
 }
 
-export type ElementData = FrameElement | TextElement | ImageElement | IconElement
+export type QRcodeLevelType = "L" | "M" | "Q" | "H"
+
+export interface QRcodeElement extends BaseElementData {
+  type: "QRcode"
+  properties: {
+    iconName: keyof typeof icons
+    position: string
+    value: string
+    title: string
+    sizeBox: number
+    level: QRcodeLevelType
+    fgColor: string
+    bgColor: string
+    viewBox: string
+    left: string
+    top: string
+    right: string
+    bottom: string
+    color: string
+    backgroundColor: string
+    size: string
+    width: string
+    height: string
+    minWidth: string
+    minHeight: string
+    maxWidth: string
+    maxHeight: string
+    margin: string
+    marginTop: string
+    marginRight: string
+    marginBottom: string
+    marginLeft: string
+    padding: string
+    paddingTop: string
+    paddingRight: string
+    paddingBottom: string
+    paddingLeft: string
+    borderRadius: string
+    borderRadiusTop: string
+    borderRadiusRight: string
+    borderRadiusBottom: string
+    borderRadiusLeft: string
+    border: string
+    borderTop: string
+    borderRight: string
+    borderBottom: string
+    borderLeft: string
+    boxShadow: string
+    opacity: string
+    zIndex: string
+    customStyle: string
+  }
+}
+
+export type BarcodeFormatType  = 
+  "CODE128" | "CODE39" | "CODE128A" | "CODE128B" | "CODE128C" |
+  "EAN13" | "EAN8" | "EAN5" | "EAN2" | "UPC" | "UPCE" | "ITF14" |
+  "ITF" | "MSI" | "MSI10" | "MSI11" | "MSI1010" | "MSI1110" |
+  "pharmacode" | "codabar" | "GenericBarcode"
+
+
+export interface BarcodeElement extends BaseElementData {
+  type: "barcode"
+  properties: {
+    iconName: keyof typeof icons
+    position: string
+    value: string
+    widthBox: number,
+    format: BarcodeFormatType,
+    displayValue: boolean,
+    fontOptions: string,
+    textAlign: string,
+    textPosition: string,
+    textMargin: 2,
+    font: string,
+    fontSize: 20,
+    background: string,
+    lineColor: string,
+    left: string
+    top: string
+    right: string
+    bottom: string
+    color: string
+    backgroundColor: string
+    size: string
+    width: string
+    height: string
+    minWidth: string
+    minHeight: string
+    maxWidth: string
+    maxHeight: string
+    margin: string
+    marginTop: string
+    marginRight: string
+    marginBottom: string
+    marginLeft: string
+    padding: string
+    paddingTop: string
+    paddingRight: string
+    paddingBottom: string
+    paddingLeft: string
+    borderRadius: string
+    borderRadiusTop: string
+    borderRadiusRight: string
+    borderRadiusBottom: string
+    borderRadiusLeft: string
+    border: string
+    borderTop: string
+    borderRight: string
+    borderBottom: string
+    borderLeft: string
+    boxShadow: string
+    opacity: string
+    zIndex: string
+    customStyle: string
+  }
+}
+
+export type ElementData = FrameElement | TextElement | ImageElement | IconElement | QRcodeElement | BarcodeElement
 
 export interface HistoryState {
   elements: ElementData[]

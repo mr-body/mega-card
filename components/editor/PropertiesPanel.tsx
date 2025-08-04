@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { IconPickerDialog } from "@/components/editor/icon-picker-dialog copy"
 import { availableIcons } from "@/lib/editor-config"
-import { CanvasProperties, ElementData, TextElement, ImageElement, IconElement } from "@/types/visual-editor"
+import { CanvasProperties, ElementData, TextElement, ImageElement, IconElement, QRcodeElement, BarcodeElement } from "@/types/visual-editor"
 import { Asterisk, MoreVertical, Star, Type } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 
@@ -182,6 +182,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         />
         <Asterisk className="absolute right-2" size={13} />
       </div>
+
       {/* Propriedades específicas por tipo */}
       {selectedElementData.type === "text" && (
         <>
@@ -207,6 +208,116 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </Button>
               </TextFormatDialog> */}
             </div>
+          </div>
+        </>
+      )}
+
+      {/* Propriedades específicas por tipo */}
+      {selectedElementData.type === "QRcode" && (
+        <>
+          <Separator />
+          <Label className="text-md font-bold">QRcode config</Label>
+          <div className="grid grid-cols-[1fr_2fr]">
+            <Label htmlFor="textContent" className="text-sm font-medium">
+              value
+            </Label>
+            <div className="grid grid-cols-[3fr_1fr] gap-1">
+              <Input
+                id="textContent"
+                value={(selectedElementData as QRcodeElement).properties.value}
+                onChange={(e) => updateElementProperty(selectedElement!, "value", e.target.value)}
+                placeholder="Exemplo de QRcode"
+              />
+              <Select
+                value={selectedElementData.properties.level || "L"}
+                onValueChange={(value) => updateElementProperty(selectedElement!, "level", value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="L">L</SelectItem>
+                  <SelectItem value="H">H</SelectItem>
+                  <SelectItem value="M">M</SelectItem>
+                  <SelectItem value="Q">Q</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-[1fr_2fr]">
+            <Label htmlFor="textContent" className="text-sm font-medium">
+              Title
+            </Label>
+            <div className="flex items-center space-x-2">
+              <Input
+                id="textContent"
+                value={(selectedElementData as QRcodeElement).properties.title}
+                onChange={(e) => updateElementProperty(selectedElement!, "title", e.target.value)}
+                placeholder="QRcode"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-[1fr_2fr]">
+            <Label htmlFor="textContent" className="text-sm font-medium">
+              viewBox
+            </Label>
+            <div className="flex items-center space-x-2">
+              <Input
+                id="textContent"
+                value={(selectedElementData as QRcodeElement).properties.viewBox}
+                onChange={(e) => updateElementProperty(selectedElement!, "viewBox", e.target.value)}
+                placeholder="0 0 256 256"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-[1fr_2fr]">
+            <Label htmlFor="textContent" className="text-sm font-medium">
+              size
+            </Label>
+            <div className="flex items-center space-x-2">
+              <Input
+                id="textContent"
+                value={(selectedElementData as QRcodeElement).properties.sizeBox}
+                onChange={(e) => updateElementProperty(selectedElement!, "sizeBox", e.target.value)}
+                placeholder="100"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-[1fr_2fr]">
+            <Label htmlFor="bgColor" className="text-sm font-medium">
+              Background
+            </Label>
+            <Input
+              type="color"
+              id="bgColor"
+              className="h-10"
+              value={
+                selectedElementData.properties.backgroundColor === "transparent"
+                  ? "#ffffff"
+                  : selectedElementData.properties.bgColor
+              }
+              onChange={(e) =>
+                updateElementProperty(selectedElement!, "bgColor", e.target.value)
+              }
+            />
+          </div>
+          <div className="grid grid-cols-[1fr_2fr]">
+            <Label htmlFor="bgColor" className="text-sm font-medium">
+              Barras
+            </Label>
+            <Input
+              type="color"
+              id="bgColor"
+              className="h-10"
+              value={
+                selectedElementData.properties.backgroundColor === "transparent"
+                  ? "#ffffff"
+                  : selectedElementData.properties.fgColor
+              }
+              onChange={(e) =>
+                updateElementProperty(selectedElement!, "fgColor", e.target.value)
+              }
+            />
           </div>
         </>
       )}
@@ -366,6 +477,176 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           </div>
         </div>
       )}
+
+      {/* Propriedades específicas por tipo */}
+      {selectedElementData.type === "barcode" && (
+        <>
+          <Separator />
+          <Label className="text-md font-bold">Barcode Properties</Label>
+
+          {/* Value */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="barcodeValue">Value</Label>
+            <Input
+              id="barcodeValue"
+              value={(selectedElementData as BarcodeElement).properties.value || ""}
+              onChange={(e) => updateElementProperty(selectedElement!, "value", e.target.value)}
+              placeholder="Enter barcode value"
+            />
+          </div>
+
+          {/* Format */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="barcodeFormat">Format</Label>
+            <select
+              id="barcodeFormat"
+              className="border rounded px-2 py-1"
+              value={(selectedElementData as BarcodeElement).properties.format || "CODE128"}
+              onChange={(e) => updateElementProperty(selectedElement!, "format", e.target.value)}
+            >
+              {[
+                "CODE128", "CODE39", "CODE128A", "CODE128B", "CODE128C",
+                "EAN13", "EAN8", "EAN5", "EAN2", "UPC", "UPCE", "ITF14",
+                "ITF", "MSI", "MSI10", "MSI11", "MSI1010", "MSI1110",
+                "pharmacode", "codabar", "GenericBarcode"
+              ].map((format) => (
+                <option key={format} value={format}>{format}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Width */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="barcodeWidth">Line Width</Label>
+            <Input
+              id="barcodeWidth"
+              type="number"
+              min={1}
+              value={(selectedElementData as BarcodeElement).properties.width || ""}
+              onChange={(e) => updateElementProperty(selectedElement!, "width", e.target.value)}
+            />
+          </div>
+
+          {/* Height */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="barcodeHeight">Height</Label>
+            <Input
+              id="barcodeHeight"
+              type="number"
+              min={10}
+              value={(selectedElementData as BarcodeElement).properties.height || ""}
+              onChange={(e) => updateElementProperty(selectedElement!, "height", e.target.value)}
+            />
+          </div>
+
+          {/* Font Size */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="fontSize">Font Size</Label>
+            <Input
+              id="fontSize"
+              type="number"
+              value={(selectedElementData as BarcodeElement).properties.fontSize || ""}
+              onChange={(e) => updateElementProperty(selectedElement!, "fontSize", e.target.value)}
+            />
+          </div>
+
+          {/* Display Value */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="displayValue">Display Text</Label>
+            <input
+              id="displayValue"
+              type="checkbox"
+              checked={(selectedElementData as BarcodeElement).properties.displayValue ?? true}
+              onChange={(e) => updateElementProperty(selectedElement!, "displayValue", (e.target.checked as any))}
+            />
+          </div>
+
+          {/* Font */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="barcodeFont">Font</Label>
+            <Input
+              id="barcodeFont"
+              value={(selectedElementData as BarcodeElement).properties.font || "monospace"}
+              onChange={(e) => updateElementProperty(selectedElement!, "font", e.target.value)}
+            />
+          </div>
+
+          {/* Font Options */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="fontOptions">Font Options</Label>
+            <Input
+              id="fontOptions"
+              value={(selectedElementData as BarcodeElement).properties.fontOptions || ""}
+              onChange={(e) => updateElementProperty(selectedElement!, "fontOptions", e.target.value)}
+              placeholder="bold, italic etc."
+            />
+          </div>
+
+          {/* Text Align */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="textAlign">Text Align</Label>
+            <select
+              id="textAlign"
+              className="border rounded px-2 py-1"
+              value={(selectedElementData as BarcodeElement).properties.textAlign || "center"}
+              onChange={(e) => updateElementProperty(selectedElement!, "textAlign", e.target.value)}
+            >
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+
+          {/* Text Position */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="textPosition">Text Position</Label>
+            <select
+              id="textPosition"
+              className="border rounded px-2 py-1"
+              value={(selectedElementData as BarcodeElement).properties.textPosition || "bottom"}
+              onChange={(e) => updateElementProperty(selectedElement!, "textPosition", e.target.value)}
+            >
+              <option value="top">Top</option>
+              <option value="bottom">Bottom</option>
+            </select>
+          </div>
+
+          {/* Text Margin */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="textMargin">Text Margin</Label>
+            <Input
+              id="textMargin"
+              type="number"
+              value={(selectedElementData as BarcodeElement).properties.textMargin || ""}
+              onChange={(e) => updateElementProperty(selectedElement!, "textMargin", e.target.value)}
+            />
+          </div>
+
+          {/* Background Color */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="bgColor">Background</Label>
+            <Input
+              id="bgColor"
+              type="color"
+              value={(selectedElementData as BarcodeElement).properties.background || "#ffffff"}
+              onChange={(e) => updateElementProperty(selectedElement!, "background", e.target.value)}
+            />
+          </div>
+
+          {/* Line Color */}
+          <div className="grid grid-cols-[1fr_2fr] items-center gap-2 mb-2">
+            <Label htmlFor="lineColor">Line Color</Label>
+            <Input
+              id="lineColor"
+              type="color"
+              value={(selectedElementData as BarcodeElement).properties.lineColor || "#000000"}
+              onChange={(e) => updateElementProperty(selectedElement!, "lineColor", e.target.value)}
+            />
+          </div>
+        </>
+      )}
+
+
 
 
       <Separator />
@@ -601,11 +882,14 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         </div>
       )}
 
-      <Separator />
-      <Label className="text-md font-bold">Colors</Label>
+      {["text", "icon"].includes(selectedElementData.type) && (
+        <>
+          <Separator />
+          <Label className="text-md font-bold">Colors</Label>
+        </>
+      )}
 
-      {/* Propriedades de cor */}
-      {(selectedElementData.type === "text" || selectedElementData.type === "icon") && (
+      {["text", "icon"].includes(selectedElementData.type) && (
         <div className="grid grid-cols-[1fr_2fr]">
           <Label htmlFor="textColor" className="text-sm font-medium">
             Color
@@ -614,14 +898,14 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             type="color"
             id="textColor"
             className="h-10"
-            value={selectedElementData.properties.color}
+            value={(selectedElementData as TextElement).properties.color}
             onChange={(e) => updateElementProperty(selectedElement!, "color", e.target.value)}
           />
         </div>
       )}
 
       {/* Background Color */}
-      {selectedElementData.type !== "image" && (
+      {!["image", "QRcode"].includes(selectedElementData.type) && (
         <div className="grid grid-cols-[1fr_2fr]">
           <Label htmlFor="bgColor" className="text-sm font-medium">
             Background
@@ -631,14 +915,17 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             id="bgColor"
             className="h-10"
             value={
-              selectedElementData.properties.backgroundColor === "transparent"
+              (selectedElementData as TextElement).properties.backgroundColor === "transparent"
                 ? "#ffffff"
-                : selectedElementData.properties.backgroundColor
+                : (selectedElementData as TextElement).properties.backgroundColor
             }
-            onChange={(e) => updateElementProperty(selectedElement!, "backgroundColor", e.target.value)}
+            onChange={(e) =>
+              updateElementProperty(selectedElement!, "backgroundColor", e.target.value)
+            }
           />
         </div>
       )}
+
 
       <Separator />
       <Label className="text-md font-bold">Sizes</Label>

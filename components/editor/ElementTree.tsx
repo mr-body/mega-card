@@ -2,7 +2,7 @@
 import React from "react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Eye, EyeOff, ImageIcon, MoreVertical, Square, Star, Type } from "lucide-react"
+import { Barcode, Eye, EyeOff, ImageIcon, MoreVertical, QrCode, Square, Star, Type } from "lucide-react"
 import { ElementData } from "@/types/visual-editor"
 import { availableIcons } from "@/lib/editor-config"
 
@@ -30,6 +30,10 @@ const getElementIcon = (type: ElementData["type"]) => {
       return ImageIcon
     case "icon":
       return Star
+    case "QRcode":
+      return QrCode
+    case "barcode":
+      return Barcode
     default:
       return Square
   }

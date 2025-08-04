@@ -33,6 +33,8 @@ import {
   ArrowDown,
   ArrowLeft,
   ArrowRight,
+  QrCode,
+  Barcode,
 } from "lucide-react"
 import { ElementType } from "@/types/visual-editor"
 
@@ -76,4 +78,6 @@ export const availableElements = [
   { type: "text" as ElementType, name: "Text", icon: Type },
   { type: "image" as ElementType, name: "Image", icon: ImageIcon },
   { type: "icon" as ElementType, name: "Icon", icon: Star },
+  { type: "QRcode" as ElementType, name: "Qrcode", icon: QrCode  },
+  { type: "barcode" as ElementType, name: "Barcode", icon: Barcode  },
 ]
