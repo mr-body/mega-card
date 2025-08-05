@@ -199,7 +199,7 @@ export default function VisualEditor() {
       />
       <div className="h-[calc(100%-50px)]">
         <ResizablePanelGroup direction="horizontal" className="h-full">
-          <ResizablePanel defaultSize={15} maxSize={30} className="bg-white min-w-[200px] border-r">
+          <ResizablePanel defaultSize={15} minSize={15} maxSize={30} className="bg-white min-w-[200px] border-r">
             <Tabs defaultValue="position" className="mb-0">
               <TabsList className="w-full grid grid-cols-3 h-[40px] p-0 shadow-none rounded-none bg-transparent border-b border-gray-300">
                 <TabsTrigger
@@ -270,6 +270,7 @@ export default function VisualEditor() {
               </TabsContent>
             </Tabs>
           </ResizablePanel>
+          <ResizableHandle />
           <ResizablePanel defaultSize={65} className="flex justify-items-start">
             <div className="flex justify-between flex-col border-r px-3 py-3">
               <div className="space-y-2">
@@ -362,8 +363,8 @@ export default function VisualEditor() {
 
             </div>
           </ResizablePanel>
-
-          <ResizablePanel defaultSize={20} minSize={10} maxSize={20}>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={20} minSize={18} maxSize={30}>
             <div className="h-full bg-white border-l border-gray-200 flex flex-col">
               <ResizablePanelGroup direction="vertical">
                 {/* Parte superior - Properties/Style */}
