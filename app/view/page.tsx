@@ -83,8 +83,8 @@ export default function VisualEditor() {
       }
       return el
     })
-    setTabs((prevTabs) =>
-      prevTabs.map((tab) => {
+    setTabs((prevTabs: any) =>
+      prevTabs.map((tab: any) => {
         if (tab.id === activeTabId) {
           return {
             ...tab,
